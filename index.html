@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Mitambo Product Store</title>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,9 +13,24 @@
     <header>
         <h1>Tech Essentials</h1>
         <p>Quality gear for modern creators</p>
+        
+        <button id="view-cart-btn" onclick="showCart()">
+            🛒 View Cart (<span id="cart-count">0</span>)
+        </button>
     </header>
     
     <main id="product-container"></main>
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCart()">&times;</span>
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-items-list"></div>    
+            <div id="cart-total" style="margin-top: 20px; font-weight: bold;"></div>
+            <button onclick="clearCart()" style="background: #ef4444; margin-top: 15px; width: 100%;">
+                Empty Cart
+            </button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
