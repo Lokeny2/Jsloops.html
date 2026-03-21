@@ -8,8 +8,18 @@ const products = [
     { id: 6, name: "Webcam HD", price: 65, desc: "1080p for clear meetings." }
 ];
 
+// Initialize cart from Local Storage or empty array if none exists
+let cart = JSON.parse(localStorage.getItem('mitamboCart')) || [];
+
 // 2. Selection
 const container = document.getElementById('product-container');
+const cartCountElement = document.getElementById('cart-count');
+
+// Helper to update the UI count
+function updateBadge() {
+    cartCountElement.innerText = cart.length;
+}
+updateBadge(); // Run once on load
 
 // 3. The Loop
 products.forEach((item) => {
@@ -22,7 +32,7 @@ products.forEach((item) => {
         <h3>${item.name}</h3>
         <p>${item.desc}</p>
         <div class="price">$${item.price}</div>
-        <button onclick="handlePurchase('${item.name}')">Buy Now</button>
+        <button onclick="handlePurchase(${item.id})">Buy Now</button>
     `;
 
     // Add to page
@@ -30,7 +40,53 @@ products.forEach((item) => {
 });
 
 // 4. Interaction
-function handlePurchase(name) {
-    console.log(`Processing order for: ${name}`);
-    alert(`Added ${name} to your cart!`);
+function handlePurchase(id) {
+    const product = products.find(p => p.id === id);
+    
+    // Add to cart array
+    cart.push(product);
+    
+    // Save updated cart to Local Storage
+    localStorage.setItem('mitamboCart', JSON.stringify(cart));
+    
+    updateBadge();
+    console.log(`Processing order for: ${product.name}`);
+    alert(`Added ${product.name} to your cart!`);
+}
+
+// --- New Functions for viewing the cart ---
+
+function showCart() {
+    const modal = document.getElementById('cart-modal');
+    const list = document.getElementById('cart-items-list');
+    const totalEl = document.getElementById('cart-total');
+    
+    list.innerHTML = '';
+    let total = 0;
+
+    if (cart.length === 0) {
+        list.innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+        // Loop through cart items to display them
+        cart.forEach((item) => {
+            total += item.price;
+            const itemRow = document.createElement('div');
+            itemRow.innerHTML = `<span>${item.name}</span> <span>$${item.price}</span>`;
+            list.appendChild(itemRow);
+        });
+    }
+
+    totalEl.innerText = `Total: $${total}`;
+    modal.style.display = 'block';
+}
+
+function closeCart() {
+    document.getElementById('cart-modal').style.display = 'none';
+}
+
+function clearCart() {
+    cart = [];
+    localStorage.removeItem('mitamboCart');
+    updateBadge();
+    closeCart();
 }
